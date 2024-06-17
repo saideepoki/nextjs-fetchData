@@ -1,21 +1,16 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import ProductButton from "./productButton";
 
 
-export default function Home() {
-  const [products, setProducts] = useState([]);
+async function fetchProducts() {
+  let data: any = await fetch("https://dummyjson.com/products");
+  data = await data.json();
+  console.log(data);
+  return data.products;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("https://dummyjson.com/products");
-      const data: any= await response.json();
-      setProducts(data.products);
-      console.log(data.products);
-    };
+}
 
-    fetchData();
-  }, []);
+export default async function Home() {
+  const products = await fetchProducts();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -24,7 +19,7 @@ export default function Home() {
         {products.map((item) => (
           <div key={item.id}>
             <li>{item.title} {item.description}</li>
-            <button onClick={() => console.log("Button clicked")}>Click me</button>
+             <ProductButton id = {item.id}/>
           </div>
         ))}
       </ul>
